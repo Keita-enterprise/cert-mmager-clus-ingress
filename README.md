@@ -17,3 +17,27 @@
           - http01:
               ingress:
                 class: nginx
+# 3- Create a file for Ingress
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: example-ingress
+              annotations:
+                kubernetes.io/ingress.class: nginx
+                cert-manager.io/cluster-issuer: letsencrypt-prod
+            spec:
+              tls:
+              - hosts:
+                - prometheus.samadounoorcloudsolutions.com
+                secretName: example-tls-secret
+              rules:
+              - host: prometheus.samadounoorcloudsolutions.com
+                http:
+                  paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: prometheus-server
+                        port:
+                          number: 80
